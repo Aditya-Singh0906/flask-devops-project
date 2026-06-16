@@ -5,7 +5,7 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     return """
-    <h1>Welcome to DevOps!</h1>
+    <h1>Welcome to CI/CD Automation!</h1>
     <p>My first DevOps project using Flask, Docker, GitHub Actions and AWS EC2.</p>
     """
 
