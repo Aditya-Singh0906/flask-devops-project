@@ -1,0 +1,35 @@
+name: Deploy Flask App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/flask-devops-project
+
+            git pull origin main
+
+            docker stop flask-app || true
+            docker rm flask-app || true
+
+            docker build -t flask-devops-app .
+
+            docker run -d \
+              --name flask-app \
+              -p 5000:5000 \
+              flask-devops-app
